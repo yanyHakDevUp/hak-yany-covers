@@ -1,0 +1,108 @@
+/* Layout containers */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+/* Easter Egg Notification Overlay */
+.easter-egg-notification {
+  position: fixed;
+  bottom: 110px;
+  left: 30px;
+  background: rgba(10, 10, 18, 0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--mood-primary);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 15px var(--mood-glow);
+  padding: 16px 20px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 1000;
+  animation: slideInLeft 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  color: white;
+}
+
+@keyframes slideInLeft {
+  from { transform: translateX(-120%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* Footer Section */
+.footer-section {
+  padding: 80px 0 40px;
+  border-top: 1px solid var(--border-glass);
+  background: rgba(5,5,8,0.5);
+  margin-top: auto;
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+.footer-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 2.2rem;
+  letter-spacing: -1px;
+}
+
+.social-links-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.social-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-glass);
+  color: var(--text-gray);
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: var(--transition-smooth);
+}
+
+.social-pill:hover {
+  color: white;
+  border-color: var(--mood-primary);
+  background: rgba(255,255,255,0.05);
+  box-shadow: 0 0 15px var(--mood-glow);
+  transform: translateY(-3px);
+}
+
+.social-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.footer-credits {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-top: 20px;
+  text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .footer-section {
+    padding: 60px 0 30px;
+  }
+  .footer-title {
+    font-size: 1.8rem;
+  }
+}
