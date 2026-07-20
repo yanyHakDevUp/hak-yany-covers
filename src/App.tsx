@@ -13,24 +13,28 @@ import { Mail, Heart, Sparkles } from 'lucide-react';
 import './App.css';
 
 const AppContent: React.FC = () => {
-  const { currentCover, profile } = useAudio();
+  const { currentCover, profile, setShowAdmin } = useAudio();
   const [loading, setLoading] = useState(true);
   const [easterEggActive, setEasterEggActive] = useState(false);
   const keysPressed = useRef<string[]>([]);
 
-  // Keyboard Easter egg listener for spelling "yany"
+  // Keyboard listener for spelling "yany" (easter egg) or "admin" (secret portal)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       keysPressed.current.push(e.key.toLowerCase());
-      if (keysPressed.current.length > 4) {
+      if (keysPressed.current.length > 5) {
         keysPressed.current.shift();
       }
       
       const word = keysPressed.current.join('');
-      if (word === 'yany') {
+      if (word.endsWith('yany')) {
         setEasterEggActive(true);
         playEasterMelody();
         setTimeout(() => setEasterEggActive(false), 5000);
+      }
+      
+      if (word.endsWith('admin')) {
+        setShowAdmin(true);
       }
     };
 

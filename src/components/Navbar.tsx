@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAudio } from '../context/AudioContext';
-import { Music, Shield, Menu, X } from 'lucide-react';
+import { Music, Menu, X } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
   const { showAdmin, setShowAdmin, activeMood, profile } = useAudio();
@@ -259,13 +259,6 @@ export const Navbar: React.FC = () => {
 
         <div className="nav-actions">
           <button 
-            className={`admin-toggle-btn ${showAdmin ? 'active' : ''}`}
-            onClick={() => setShowAdmin(!showAdmin)}
-            title="Admin Dashboard"
-          >
-            <Shield size={18} />
-          </button>
-          <button 
             className="menu-toggle-btn"
             onClick={() => setMobileMenuOpen(true)}
           >
@@ -300,16 +293,6 @@ export const Navbar: React.FC = () => {
           onClick={() => scrollToSection('about')}
         >
           About Me
-        </button>
-        <button 
-          className={`mobile-nav-link ${showAdmin ? 'active' : ''}`}
-          onClick={() => {
-            setShowAdmin(true);
-            setMobileMenuOpen(false);
-          }}
-          style={{ color: 'var(--mood-primary)', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1.75rem' }}
-        >
-          <Shield size={24} /> Admin
         </button>
       </div>
     </>

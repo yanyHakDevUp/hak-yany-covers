@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { useAudio } from '../context/AudioContext';
-import { Play, Pause, Calendar, BookOpen, Music4 } from 'lucide-react';
+import { Play, Pause, Calendar, Music4 } from 'lucide-react';
 import type { Cover } from '../types';
 
 export const Covers: React.FC = () => {
   const { covers, currentCover, isPlaying, playSong, togglePlay, activeMood, setMood } = useAudio();
-  const [expandedCard, setExpandedCard] = useState<string | null>(null);
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
   const moodsList: { id: 'all' | 'happy' | 'sad' | 'midnight' | 'love'; label: string; emoji: string }[] = [
@@ -20,11 +19,6 @@ export const Covers: React.FC = () => {
     ? covers 
     : covers.filter(c => c.mood === activeMood);
 
-  const toggleExpand = (id: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setExpandedCard(expandedCard === id ? null : id);
-  };
-
   const handlePlayClick = (cover: Cover, e: React.MouseEvent) => {
     e.stopPropagation();
     if (currentCover?.id === cover.id) {
@@ -32,14 +26,6 @@ export const Covers: React.FC = () => {
     } else {
       playSong(cover);
     }
-  };
-
-  const parseStaticLyrics = (lyricsStr: string) => {
-    // Strip timestamp tags for simple previewing
-    return lyricsStr
-      .split('\n')
-      .map(line => line.replace(/\[\d{2}:\d{2}\.\d{2}\]/g, '').trim())
-      .filter(line => line.length > 0);
   };
 
   return (
@@ -291,7 +277,6 @@ export const Covers: React.FC = () => {
               filteredCovers.map((cover) => {
                 const isCurrent = currentCover?.id === cover.id;
                 const isCardPlaying = isCurrent && isPlaying;
-                const isExpanded = expandedCard === cover.id;
 
                 return (
                   <div
@@ -358,40 +343,9 @@ export const Covers: React.FC = () => {
                       <div className="cover-artist">Cover by Hak Yany</div>
                       
                       <p className="cover-story-preview">
-                        "{cover.memory.length > 90 ? `${cover.memory.substring(0, 90)}...` : cover.memory}"
+                        {cover.memory}
                       </p>
-
-                      <div className="cover-card-actions">
-                        <button
-                          className={`action-icon-btn ${isExpanded ? 'active' : ''}`}
-                          onClick={(e) => toggleExpand(cover.id, e)}
-                        >
-                          <BookOpen size={14} />
-                          Diary & Lyrics
-                        </button>
-                      </div>
                     </div>
-
-                    {/* Expandable Diary & Static Lyrics */}
-                    {isExpanded && (
-                      <div
-                        className="expanded-lyrics-container custom-scroll"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <div style={{ marginBottom: '20px', textAlign: 'left', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '12px' }}>
-                          <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: '700', color: 'white' }}>Recording Memory:</span>
-                          <p style={{ marginTop: '6px', fontStyle: 'italic', color: 'var(--text-gray)', fontSize: '0.82rem' }}>{cover.memory}</p>
-                        </div>
-                        <div>
-                          <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: '700', color: 'white', display: 'block', marginBottom: '10px' }}>Lyrics preview:</span>
-                          {parseStaticLyrics(cover.lyrics).map((line, idx) => (
-                            <div key={idx} className="lyric-preview-line">
-                              {line}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
                   </div>
                 );
               })
