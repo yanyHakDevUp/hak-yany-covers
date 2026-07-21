@@ -27,7 +27,7 @@ interface AudioContextType {
   setShowFullPlayer: (show: boolean) => void;
   parsedLyrics: { time: number; text: string }[];
   currentLyricIndex: number;
-  audioRef: React.RefObject<HTMLAudioElement | null>;
+  audioRef: React.RefObject<HTMLVideoElement | null>;
 }
 
 const AudioContext = createContext<AudioContextType | undefined>(undefined);
@@ -45,7 +45,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [showFullPlayer, setShowFullPlayer] = useState(false);
   const [analyserNode, setAnalyserNode] = useState<AnalyserNode | null>(null);
 
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioRef = useRef<HTMLVideoElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
@@ -88,15 +88,22 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       setCurrentCover(initialCovers[0]);
     }
 
-    // Create Audio Element
-    const audio = new Audio();
-    audio.preload = 'auto';
-    audio.crossOrigin = 'anonymous'; // Enable CORS for visualizer
-    audioRef.current = audio;
+    // Create HTML5 Video Element (acts as our single audio/video source)
+    const video = document.createElement('video');
+    video.preload = 'auto';
+    video.crossOrigin = 'anonymous'; // Enable CORS for visualizer
+    video.playsInline = true;
+    video.loop = true;
+    video.className = 'hidden-video-element';
+    document.body.appendChild(video);
+    audioRef.current = video;
 
     return () => {
-      audio.pause();
-      audio.src = '';
+      video.pause();
+      video.src = '';
+      if (video.parentNode === document.body) {
+        document.body.removeChild(video);
+      }
     };
   }, []);
 

@@ -2,20 +2,20 @@
 
 :root {
   /* Dynamic themes managed by active mood */
-  --mood-primary: #a020f0;
-  --mood-secondary: #ff007f;
-  --mood-glow: rgba(160, 32, 240, 0.45);
-  --mood-gradient: linear-gradient(135deg, #a020f0 0%, #ff007f 100%);
+  --mood-primary: #e5e5e5;
+  --mood-secondary: #8a8a99;
+  --mood-glow: rgba(255, 255, 255, 0.08);
+  --mood-gradient: linear-gradient(135deg, #ffffff 0%, #8a8a99 100%);
   
   /* Constant colors */
-  --bg-dark: #07070a;
-  --bg-card: rgba(15, 15, 25, 0.6);
-  --bg-card-hover: rgba(25, 25, 38, 0.85);
-  --border-glass: rgba(255, 255, 255, 0.08);
-  --border-glass-focus: rgba(255, 255, 255, 0.2);
-  --text-white: #ffffff;
-  --text-gray: #a0a0ba;
-  --text-dim: #70708f;
+  --bg-dark: #0b0b0f;
+  --bg-card: rgba(18, 18, 26, 0.45);
+  --bg-card-hover: rgba(26, 26, 36, 0.7);
+  --border-glass: rgba(255, 255, 255, 0.04);
+  --border-glass-focus: rgba(255, 255, 255, 0.12);
+  --text-white: #f8f8fa;
+  --text-gray: #a6a6bb;
+  --text-dim: #6c6c80;
   
   /* Fonts */
   --font-sans: 'Inter', sans-serif;
@@ -29,31 +29,31 @@
 
 /* Mood variable modifiers */
 [data-theme='happy'] {
-  --mood-primary: #f093fb;
-  --mood-secondary: #f5576c;
-  --mood-glow: rgba(245, 87, 108, 0.45);
-  --mood-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --mood-primary: #d4af37;
+  --mood-secondary: #b59023;
+  --mood-glow: rgba(212, 175, 55, 0.15);
+  --mood-gradient: linear-gradient(135deg, #d4af37 0%, #b59023 100%);
 }
 
 [data-theme='sad'] {
-  --mood-primary: #38ef7d;
-  --mood-secondary: #11998e;
-  --mood-glow: rgba(17, 153, 142, 0.45);
-  --mood-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  --mood-primary: #5f9ea0;
+  --mood-secondary: #4682b4;
+  --mood-glow: rgba(95, 158, 160, 0.15);
+  --mood-gradient: linear-gradient(135deg, #5f9ea0 0%, #4682b4 100%);
 }
 
 [data-theme='love'] {
-  --mood-primary: #ff416c;
-  --mood-secondary: #ff4b2b;
-  --mood-glow: rgba(255, 65, 108, 0.45);
-  --mood-gradient: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+  --mood-primary: #a83c54;
+  --mood-secondary: #721c2d;
+  --mood-glow: rgba(168, 60, 84, 0.15);
+  --mood-gradient: linear-gradient(135deg, #a83c54 0%, #721c2d 100%);
 }
 
 [data-theme='midnight'] {
-  --mood-primary: #00f2fe;
-  --mood-secondary: #4facfe;
-  --mood-glow: rgba(0, 242, 254, 0.45);
-  --mood-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --mood-primary: #5352ed;
+  --mood-secondary: #322588;
+  --mood-glow: rgba(83, 82, 237, 0.15);
+  --mood-gradient: linear-gradient(135deg, #5352ed 0%, #322588 100%);
 }
 
 /* Global Reset */
@@ -80,9 +80,9 @@ body::before {
   left: -20%;
   width: 140%;
   height: 140%;
-  background: radial-gradient(circle at 30% 30%, rgba(35, 15, 60, 0.3) 0%, transparent 40%),
-              radial-gradient(circle at 70% 80%, rgba(15, 30, 60, 0.2) 0%, transparent 40%),
-              radial-gradient(circle at 50% 50%, rgba(60, 10, 40, 0.25) 0%, transparent 50%);
+  background: radial-gradient(circle at 30% 30%, rgba(83, 82, 237, 0.08) 0%, transparent 40%),
+              radial-gradient(circle at 70% 80%, rgba(95, 158, 160, 0.05) 0%, transparent 40%),
+              radial-gradient(circle at 50% 50%, rgba(168, 60, 84, 0.06) 0%, transparent 50%);
   z-index: -2;
   pointer-events: none;
   animation: bgShift 25s ease-in-out infinite alternate;
@@ -293,4 +293,77 @@ body::before {
 }
 .custom-scroll::-webkit-scrollbar-thumb:hover {
   background: var(--mood-primary);
+}
+
+/* Video Element Reparenting Layout Styles */
+.hidden-video-element {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  z-index: -1000;
+}
+
+.player-video-background {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  opacity: 0.15;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+/* Synced Scrolling Lyrics Pane */
+.lyrics-pane {
+  width: 100%;
+  height: 90%;
+  overflow-y: auto;
+  padding: 80px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  mask-image: linear-gradient(to bottom, transparent 0%, white 20%, white 80%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, white 20%, white 80%, transparent 100%);
+  text-align: left;
+  scroll-behavior: smooth;
+}
+
+.lyric-item {
+  font-family: var(--font-sans);
+  font-size: 1.35rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.25);
+  line-height: 1.6;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: left center;
+  transform: scale(0.95);
+  padding: 0 10px;
+}
+
+.lyric-item:hover {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.lyric-item.lyric-active {
+  color: var(--text-white);
+  font-size: 1.85rem;
+  font-weight: 800;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.15), 0 0 25px var(--mood-glow);
+  transform: scale(1.05);
+}
+
+.lyrics-container-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }

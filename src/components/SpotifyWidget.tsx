@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAudio } from '../context/AudioContext';
-import { Play, Pause, Maximize2 } from 'lucide-react';
+import { Play, Pause, Maximize2, Music } from 'lucide-react';
 
 export const SpotifyWidget: React.FC = () => {
   const { currentCover, isPlaying, currentTime, duration, togglePlay, setShowFullPlayer } = useAudio();
@@ -188,7 +188,7 @@ export const SpotifyWidget: React.FC = () => {
               className="widget-art" 
               style={{ background: currentCover.coverImage }}
             >
-              🎤
+              <Music size={18} style={{ color: 'white' }} />
             </div>
             <div className="widget-info">
               <div className="widget-title">

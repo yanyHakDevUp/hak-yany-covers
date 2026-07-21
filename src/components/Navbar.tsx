@@ -52,16 +52,6 @@ export const Navbar: React.FC = () => {
     }
   };
 
-  const getMoodEmoji = () => {
-    switch (activeMood) {
-      case 'happy': return '☀️';
-      case 'sad': return '🌧️';
-      case 'love': return '❤️';
-      case 'midnight': return '🌙';
-      default: return '🎤';
-    }
-  };
-
   return (
     <>
       <style>{`
@@ -233,7 +223,7 @@ export const Navbar: React.FC = () => {
         <div className="navbar-logo" onClick={() => scrollToSection('home')}>
           <Music size={20} className="grad-text" />
           {profile.name}
-          <span>{getMoodEmoji()} {activeMood !== 'all' ? activeMood : 'feeling'}</span>
+          <span>{activeMood !== 'all' ? activeMood : 'all moods'}</span>
         </div>
 
         <div className="navbar-links">

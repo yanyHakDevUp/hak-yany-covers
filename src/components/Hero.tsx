@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAudio } from '../context/AudioContext';
-import { Play, User, Sparkles, Heart } from 'lucide-react';
+import { Play, User, Sparkles, Heart, Music } from 'lucide-react';
 import { Visualizer } from './Visualizer';
 
 export const Hero: React.FC = () => {
@@ -243,11 +243,11 @@ export const Hero: React.FC = () => {
             <div className="hero-content">
               <div className="hero-badge">
                 <Sparkles size={12} />
-                Gen Z Artist Portfolio
+                Bedroom Cover Sessions
               </div>
               <h1 className="hero-title">
-                Hi, I'm <span className="grad-text">{profile.name}</span> 🎤 <br />
-                I sing what I <span className="neon-text-glow">feel.</span>
+                Hi, I'm <span className="grad-text">{profile.name}</span> <br />
+                I sing what I feel.
               </h1>
               <p className="hero-desc">
                 {profile.introBio}
@@ -277,7 +277,7 @@ export const Hero: React.FC = () => {
                 >
                   <div className="fav-album-art" style={{ background: favCover.coverImage }}>
                     <div className="pulse-ring" />
-                    🎧
+                    <Music size={22} style={{ color: 'white' }} />
                   </div>
                   <div className="widget-text-container">
                     <div className="widget-label">
@@ -304,7 +304,7 @@ export const Hero: React.FC = () => {
                   <div className="profile-overlay-gradient">
                     <div className="profile-name">{profile.name}</div>
                     <div className="profile-vibe">
-                      <span>🎧</span> {profile.singingStyle.split('/')[0].trim()}
+                      <Music size={14} style={{ color: 'var(--mood-primary)' }} /> {profile.singingStyle.split('/')[0].trim()}
                     </div>
                   </div>
                 </div>

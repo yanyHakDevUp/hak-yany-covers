@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useAudio } from '../context/AudioContext';
-import { Play, Pause, SkipForward, Volume2, Minimize2, Radio } from 'lucide-react';
+import { Play, Pause, SkipForward, Volume2, Minimize2, Radio, Music } from 'lucide-react';
 import { Visualizer } from './Visualizer';
 
 export const Player: React.FC = () => {
@@ -16,32 +16,53 @@ export const Player: React.FC = () => {
     seek,
     changeVolume,
     covers,
-    playSong
+    playSong,
+    audioRef,
+    parsedLyrics,
+    currentLyricIndex
   } = useAudio();
 
   const [visualizerType, setVisualizerType] = useState<'wave' | 'bars' | 'circular'>('circular');
 
-  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const videoContainerRef = useRef<HTMLDivElement | null>(null);
+  const activeLyricRef = useRef<HTMLDivElement | null>(null);
 
-  // Sync video play/pause
+  // Parent the global video element into this player when mounted
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    if (isPlaying) {
+    const container = videoContainerRef.current;
+    const video = audioRef.current;
+    if (!container || !video || !currentCover?.videoUrl) return;
+
+    const wasPlaying = !video.paused;
+    container.appendChild(video);
+    video.className = 'player-video-background';
+
+    if (wasPlaying) {
       video.play().catch(() => {});
-    } else {
-      video.pause();
     }
-  }, [isPlaying, currentCover]);
 
-  // Sync video time with audio time
+    return () => {
+      const wasPlayingOnClean = !video.paused;
+      if (video.parentNode === container) {
+        container.removeChild(video);
+      }
+      video.className = 'hidden-video-element';
+      document.body.appendChild(video);
+      if (wasPlayingOnClean) {
+        video.play().catch(() => {});
+      }
+    };
+  }, [audioRef, currentCover?.videoUrl, showFullPlayer]);
+
+  // Scroll active lyric to center
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    if (Math.abs(video.currentTime - currentTime) > 0.35) {
-      video.currentTime = currentTime;
+    if (activeLyricRef.current) {
+      activeLyricRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
     }
-  }, [currentTime]);
+  }, [currentLyricIndex]);
 
   if (!showFullPlayer || !currentCover) return null;
 
@@ -75,7 +96,7 @@ export const Player: React.FC = () => {
           position: fixed;
           inset: 0;
           z-index: 1100;
-          background: rgba(5, 5, 8, 0.96);
+          background: rgba(11, 11, 15, 0.95);
           backdrop-filter: blur(30px);
           -webkit-backdrop-filter: blur(30px);
           display: flex;
@@ -89,7 +110,7 @@ export const Player: React.FC = () => {
           inset: 0;
           pointer-events: none;
           z-index: 2;
-          opacity: 0.3;
+          opacity: 0.15;
         }
 
         .player-header {
@@ -102,20 +123,19 @@ export const Player: React.FC = () => {
           border-bottom: 1px solid var(--border-glass);
         }
 
-        .player-video-background {
+        .player-video-container {
           position: absolute;
           inset: 0;
           width: 100%;
           height: 100%;
-          object-fit: cover;
           z-index: 0;
-          opacity: 0.55;
+          pointer-events: none;
         }
 
         .player-video-overlay {
           position: absolute;
           inset: 0;
-          background: linear-gradient(180deg, rgba(5, 5, 8, 0.45) 0%, rgba(5, 5, 8, 0.9) 100%);
+          background: linear-gradient(180deg, rgba(11, 11, 15, 0.45) 0%, rgba(11, 11, 15, 0.9) 100%);
           z-index: 1;
           pointer-events: none;
         }
@@ -158,7 +178,7 @@ export const Player: React.FC = () => {
           flex-grow: 1;
           display: grid;
           grid-template-columns: 1fr 1.2fr;
-          gap: 40px;
+          gap: 60px;
           padding: 40px;
           max-width: 1200px;
           margin: 0 auto;
@@ -192,12 +212,11 @@ export const Player: React.FC = () => {
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 4rem;
           box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), 0 0 25px var(--mood-glow);
           position: absolute;
           z-index: 10;
           animation: ${isPlaying ? 'spin 20s linear infinite' : 'none'};
-          border: 4px solid var(--border-glass);
+          border: 1px solid var(--border-glass);
         }
 
         .song-details-pane {
@@ -316,74 +335,16 @@ export const Player: React.FC = () => {
           background: white;
         }
 
-        /* Right Side: 3D Music Card */
+        /* Right Side: Lyrics pane container */
         .player-right-pane {
           display: flex;
           flex-direction: column;
           justify-content: center;
-          align-items: center;
+          align-items: flex-start;
           overflow: hidden;
           position: relative;
           border-left: 1px solid var(--border-glass);
-          padding-left: 40px;
-        }
-
-        /* 3D Music Card Styles */
-        .music-3d-card-wrapper {
-          perspective: 1000px;
-          width: 100%;
-          height: 380px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        .music-3d-card {
-          width: 220px;
-          height: 300px;
-          position: relative;
-          transform-style: preserve-3d;
-          animation: float3D 6s ease-in-out infinite, rotate3D 15s linear infinite;
-        }
-        .card-face {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          backface-visibility: hidden;
-          border-radius: 24px;
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          backdrop-filter: blur(15px);
-          -webkit-backdrop-filter: blur(15px);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.05);
-        }
-        .card-front {
-          transform: rotateY(0deg);
-        }
-        .card-back {
-          transform: rotateY(180deg);
-          background: rgba(255, 255, 255, 0.08);
-          border-color: var(--mood-primary);
-        }
-        .music-3d-note {
-          font-size: 6.5rem;
-          filter: drop-shadow(0 0 20px var(--mood-glow));
-          animation: pulseNote 2s ease-in-out infinite;
-        }
-        
-        @keyframes float3D {
-          0%, 100% { transform: translateY(0) rotateX(8deg); }
-          50% { transform: translateY(-15px) rotateX(-8deg); }
-        }
-        @keyframes rotate3D {
-          0% { transform: rotateY(0deg); }
-          100% { transform: rotateY(360deg); }
-        }
-        @keyframes pulseNote {
-          0%, 100% { transform: scale(1); filter: drop-shadow(0 0 20px var(--mood-glow)); }
-          50% { transform: scale(1.1); filter: drop-shadow(0 0 35px var(--mood-glow)); }
+          padding-left: 50px;
         }
 
         /* Visualizer Selector Buttons */
@@ -419,25 +380,31 @@ export const Player: React.FC = () => {
           .player-body {
             grid-template-columns: 1fr;
             grid-template-rows: auto 1fr;
-            gap: 20px;
-            padding: 20px;
+            gap: 30px;
+            padding: 30px 20px;
             overflow-y: auto;
           }
           .player-right-pane {
             border-left: none;
             padding-left: 0;
             border-top: 1px solid var(--border-glass);
-            padding-top: 20px;
-            min-height: 350px;
-          }
-          .lyrics-scroller {
-            padding: 40px 0;
-          }
-          .lyric-line {
-            font-size: 1.35rem;
+            padding-top: 30px;
+            min-height: 250px;
+            width: 100%;
           }
           .player-header {
             padding: 16px 20px;
+          }
+          .visualizer-container {
+            width: 200px;
+            height: 200px;
+          }
+          .large-album-art {
+            width: 130px;
+            height: 130px;
+          }
+          .large-song-title {
+            font-size: 1.5rem;
           }
         }
       `}</style>
@@ -446,24 +413,14 @@ export const Player: React.FC = () => {
         {/* Background Particles Simulation */}
         <canvas className="player-particles" />
 
-        {/* Fullscreen Video Background */}
-        {currentCover.videoUrl && (
-          <video
-            ref={videoRef}
-            src={currentCover.videoUrl}
-            muted
-            loop
-            autoPlay
-            playsInline
-            className="player-video-background"
-          />
-        )}
+        {/* Fullscreen Shared Video Background Container */}
+        <div ref={videoContainerRef} className="player-video-container" />
         <div className="player-video-overlay" />
 
         {/* Header */}
         <header className="player-header">
           <div className="player-header-title">
-            <Radio size={14} className="neon-text-glow" /> 
+            <Radio size={14} className="grad-text" /> 
             Now Playing Cover — <span>#{currentCover.mood}</span>
           </div>
           <button 
@@ -484,7 +441,7 @@ export const Player: React.FC = () => {
                 className="large-album-art"
                 style={{ background: currentCover.coverImage }}
               >
-                🎤
+                <Music size={48} style={{ color: 'white' }} />
               </div>
               
               {/* Web Audio Canvas visualizer wrapped around the record */}
@@ -572,17 +529,28 @@ export const Player: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Panel: 3D Music Graphic */}
-          <div className="player-right-pane 3d-music-pane">
-            <div className="music-3d-card-wrapper">
-              <div className="music-3d-card">
-                <div className="card-face card-front">
-                  <div className="music-3d-note">🎵</div>
+          {/* Right Panel: Synced Scrolling Lyrics */}
+          <div className="player-right-pane lyrics-container-wrapper">
+            <div className="lyrics-pane custom-scroll">
+              {parsedLyrics.length > 0 ? (
+                parsedLyrics.map((lyric, idx) => {
+                  const isActive = idx === currentLyricIndex;
+                  return (
+                    <div
+                      key={idx}
+                      ref={isActive ? activeLyricRef : null}
+                      className={`lyric-item ${isActive ? 'lyric-active' : ''}`}
+                      onClick={() => seek(lyric.time)}
+                    >
+                      {lyric.text}
+                    </div>
+                  );
+                })
+              ) : (
+                <div className="lyric-item" style={{ opacity: 0.5, textAlign: 'center', width: '100%' }}>
+                  No lyrics available for this cover.
                 </div>
-                <div className="card-face card-back">
-                  <div className="music-3d-note">🎧</div>
-                </div>
-              </div>
+              )}
             </div>
           </div>
         </div>

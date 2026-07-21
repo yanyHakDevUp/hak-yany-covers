@@ -1,18 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useAudio } from '../context/AudioContext';
-import { Play, Pause, Calendar, Music4 } from 'lucide-react';
+import { Play, Pause, Calendar, Music, Music4 } from 'lucide-react';
 import type { Cover } from '../types';
 
 export const Covers: React.FC = () => {
   const { covers, currentCover, isPlaying, playSong, togglePlay, activeMood, setMood } = useAudio();
-  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
-  const moodsList: { id: 'all' | 'happy' | 'sad' | 'midnight' | 'love'; label: string; emoji: string }[] = [
-    { id: 'all', label: 'All covers', emoji: '🎙️' },
-    { id: 'happy', label: 'Happy songs', emoji: '☀️' },
-    { id: 'sad', label: 'Sad songs', emoji: '🌧️' },
-    { id: 'midnight', label: 'Midnight vibes', emoji: '🌙' },
-    { id: 'love', label: 'Love songs', emoji: '❤️' }
+  const moodsList: { id: 'all' | 'happy' | 'sad' | 'midnight' | 'love'; label: string }[] = [
+    { id: 'all', label: 'All covers' },
+    { id: 'happy', label: 'Happy vibe' },
+    { id: 'sad', label: 'Sad vibe' },
+    { id: 'midnight', label: 'Midnight vibe' },
+    { id: 'love', label: 'Love vibe' }
   ];
 
   const filteredCovers = activeMood === 'all' 
@@ -54,9 +53,19 @@ export const Covers: React.FC = () => {
           font-size: 0.9rem;
           display: flex;
           align-items: center;
-          gap: 8px;
+          gap: 10px;
           transition: var(--transition-smooth);
         }
+        .mood-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          display: inline-block;
+        }
+        .mood-dot-happy { background: #d4af37; }
+        .mood-dot-sad { background: #5f9ea0; }
+        .mood-dot-love { background: #a83c54; }
+        .mood-dot-midnight { background: #5352ed; }
         .mood-btn:hover {
           color: white;
           background: rgba(255, 255, 255, 0.08);
@@ -258,7 +267,6 @@ export const Covers: React.FC = () => {
             My <span className="grad-text">Voice Covers</span>
           </h2>
 
-          {/* Mood Filters */}
           <div className="mood-selector">
             {moodsList.map((m) => (
               <button
@@ -266,7 +274,10 @@ export const Covers: React.FC = () => {
                 className={`mood-btn ${activeMood === m.id ? 'active' : ''}`}
                 onClick={() => setMood(m.id)}
               >
-                <span>{m.emoji}</span> {m.label}
+                {m.id !== 'all' && (
+                  <span className={`mood-dot mood-dot-${m.id}`} />
+                )}
+                {m.label}
               </button>
             ))}
           </div>
@@ -283,30 +294,13 @@ export const Covers: React.FC = () => {
                     key={cover.id}
                     className="cover-card glass-card"
                     onClick={(e) => handlePlayClick(cover, e)}
-                    onMouseEnter={() => setHoveredCard(cover.id)}
-                    onMouseLeave={() => setHoveredCard(null)}
                   >
                     {/* Cover Art Box */}
                     <div
                       className="cover-art-wrapper"
                       style={{ background: cover.coverImage }}
                     >
-                      {cover.videoUrl && (isCardPlaying || hoveredCard === cover.id) && (
-                        <video
-                          src={cover.videoUrl}
-                          muted
-                          loop
-                          autoPlay
-                          playsInline
-                          style={{
-                            position: 'absolute',
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'cover',
-                            zIndex: 0
-                          }}
-                        />
-                      )}
+                      <Music size={40} style={{ opacity: 0.15, zIndex: 1 }} />
                       <div className="cover-art-overlay" />
                       <button
                         className="play-overlay-btn"
