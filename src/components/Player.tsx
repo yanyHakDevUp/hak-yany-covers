@@ -379,32 +379,54 @@ export const Player: React.FC = () => {
         @media (max-width: 991px) {
           .player-body {
             grid-template-columns: 1fr;
-            grid-template-rows: auto 1fr;
-            gap: 30px;
-            padding: 30px 20px;
-            overflow-y: auto;
+            grid-template-rows: 1fr;
+            gap: 20px;
+            padding: 20px;
+            overflow: hidden;
           }
           .player-right-pane {
-            border-left: none;
-            padding-left: 0;
-            border-top: 1px solid var(--border-glass);
-            padding-top: 30px;
-            min-height: 250px;
+            display: none !important;
+          }
+          .player-left-pane {
             width: 100%;
+            height: 100%;
+            justify-content: space-around;
+            gap: 10px;
           }
           .player-header {
             padding: 16px 20px;
           }
           .visualizer-container {
-            width: 200px;
-            height: 200px;
+            width: 220px;
+            height: 220px;
           }
           .large-album-art {
-            width: 130px;
-            height: 130px;
+            width: 140px;
+            height: 140px;
           }
           .large-song-title {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .visualizer-container {
+            width: 180px;
+            height: 180px;
+          }
+          .large-album-art {
+            width: 110px;
+            height: 110px;
+          }
+          .large-song-title {
+            font-size: 1.35rem;
+          }
+          .playback-controls-row {
+            gap: 16px;
+          }
+          .main-play-pause-btn {
+            width: 56px;
+            height: 56px;
           }
         }
       `}</style>
