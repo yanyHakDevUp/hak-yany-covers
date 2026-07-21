@@ -154,13 +154,13 @@ export const About: React.FC = () => {
               </div>
               <div className="story-text">
                 <p>
-                  Welcome to my bedroom diary, aka my acoustic cave of feelings. Since I was a kid, singing has been my ultimate escape from reality (and from doing chores). Whenever life gets too chaotic, too quiet, or my neighbors are making too much noise, I just hit record.
+                  Welcome to my acoustic cave of feelings. I sing in my bedroom mostly because my neighbors threatened to call the police if I kept singing in the shower.
                 </p>
                 <p>
-                  Every cover here represents a moment in time—a specific mood, a late-night brainrot session, or a very emotional shower. I definitely don't aim for auto-tuned perfection; I aim for raw, uncut honesty (and hoping my mic doesn't catch my heavy breathing).
+                  Every cover here is raw and un-tuned—mostly because I don't know how to use Auto-Tune, and partly because I like to keep it real (heavy breathing and all).
                 </p>
                 <p>
-                  So thank you for stepping into my chaotic world and listening to my bedroom sessions. Grab your headphones, lock your door, and let's get emotional together. No judgment allowed!
+                  So grab your headphones, lock your door, and let's get emotional. Or don't, I'm not the boss of you.
                 </p>
               </div>
             </div>

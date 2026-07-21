@@ -19,7 +19,7 @@ export const defaultCovers: Cover[] = [
 [00:43.00] Heaven when I held her...
 [00:48.00] ✨ (Instrumental Outro)`,
     recordedDate: 'July 2026',
-    memory: 'គ្រប់បទអត់មានទាក់ទងជីវិតពិតទេ គ្មានស្នេហាផងច្រៀងកម្សាន្តអារម្មណ៍',
+    memory: 'Not related to my real life. I am single and just singing to my cat.',
     mood: 'love'
   },
   {
@@ -44,7 +44,7 @@ export const defaultCovers: Cover[] = [
 [00:47.00] 'Cause how could I ever love anybody else?
 [00:52.00] 💔 (Emotional Bridge)`,
     recordedDate: 'May 2026',
-    memory: 'គ្រប់បទអត់មានទាក់ទងជីវិតពិតទេ គ្មានស្នេហាផងច្រៀងកម្សាន្តអារម្មណ៍',
+    memory: 'Singing like my heart was broken, even though my biggest issue is deciding what to eat.',
     mood: 'sad'
   },
   {
@@ -71,7 +71,7 @@ export const defaultCovers: Cover[] = [
 [00:43.00] You know it's not the same...
 [00:47.00] ☀️ (Energetic Outro)`,
     recordedDate: 'June 2026',
-    memory: 'គ្រប់បទអត់មានទាក់ទងជីវិតពិតទេ គ្មានស្នេហាផងច្រៀងកម្សាន្តអារម្មណ៍',
+    memory: 'Vibing in my bedroom. Apologies to the neighbors for the high notes.',
     mood: 'happy'
   },
   {
@@ -93,7 +93,7 @@ export const defaultCovers: Cover[] = [
 [00:36.00] 🌃 (Screaming Saxophone Solo)
 [00:40.00] ...Midnight, the city is my home...`,
     recordedDate: 'March 2026',
-    memory: 'គ្រប់បទអត់មានទាក់ទងជីវិតពិតទេ គ្មានស្នេហាផងច្រៀងកម្សាន្តអារម្មណ៍',
+    memory: 'My neighbors loved this cover so much they threw a shoe at my window.',
     mood: 'midnight'
   },
   {
@@ -116,7 +116,7 @@ export const defaultCovers: Cover[] = [
 [00:51.00] And in your eyes, you're holding mine...
 [00:57.00] ❤️ (Romantic String Outro)`,
     recordedDate: 'July 2026',
-    memory: 'គ្រប់បទអត់មានទាក់ទងជីវិតពិតទេ គ្មានស្នេហាផងច្រៀងកម្សាន្តអារម្មណ៍',
+    memory: 'Vibing at 2 AM. Recorded this before the sleepiness kicked in.',
     mood: 'love'
   }
 ];

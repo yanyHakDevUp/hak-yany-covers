@@ -174,8 +174,10 @@ export const Navbar: React.FC = () => {
           left: 0;
           width: 100vw;
           height: 100vh;
-          background: rgba(5, 5, 8, 0.95);
-          z-index: 999;
+          background: #0b0b0f;
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          z-index: 1010;
           display: flex;
           flex-direction: column;
           align-items: center;

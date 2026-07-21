@@ -107,16 +107,16 @@ const AppContent: React.FC = () => {
         <div className="container">
           <div className="footer-content">
             <h2 className="footer-title">
-              Let's <span className="grad-text">Connect 💌</span>
+              Let's <span className="grad-text">Connect</span>
             </h2>
             
             <p className="footer-subtitle" style={{ maxWidth: '600px', margin: '0 auto 24px auto', fontSize: '0.95rem', color: 'var(--text-gray)', lineHeight: '1.6' }}>
-              I am not a singer but I can sing. You can hire me haha, or contact me for coding and software development! XD
+              I am not a professional singer, but I am cheap. Hire me for covers or coding!
             </p>
             
             <div className="social-links-row">
               <a href={profile.tiktok} target="_blank" rel="noopener noreferrer" className="social-pill">
-                <span className="social-icon">🎵</span> TikTok
+                TikTok
               </a>
               <a href={profile.instagram} target="_blank" rel="noopener noreferrer" className="social-pill">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="social-icon"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg> Instagram
@@ -131,7 +131,7 @@ const AppContent: React.FC = () => {
 
             <div className="footer-credits">
               <p>Made with <Heart size={12} fill="var(--mood-primary)" color="transparent" style={{ display: 'inline-block', verticalAlign: 'middle', margin: '0 4px' }} /> by {profile.name} © {new Date().getFullYear()}</p>
-              <p style={{ color: 'var(--text-dim)', fontSize: '0.7rem', marginTop: '6px' }}>Try typing "yany" on your keyboard for a hidden diary melody! 🔑</p>
+              <p style={{ color: 'var(--text-dim)', fontSize: '0.7rem', marginTop: '6px' }}>Type "yany" on your keyboard for a secret melody.</p>
             </div>
           </div>
         </div>
