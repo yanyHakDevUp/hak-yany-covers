@@ -17,15 +17,12 @@ export const Player: React.FC = () => {
     changeVolume,
     covers,
     playSong,
-    audioRef,
-    parsedLyrics,
-    currentLyricIndex
+    audioRef
   } = useAudio();
 
   const [visualizerType, setVisualizerType] = useState<'wave' | 'bars' | 'circular'>('circular');
 
   const videoContainerRef = useRef<HTMLDivElement | null>(null);
-  const activeLyricRef = useRef<HTMLDivElement | null>(null);
 
   // Parent the global video element into this player when mounted
   useEffect(() => {
@@ -53,16 +50,6 @@ export const Player: React.FC = () => {
       }
     };
   }, [audioRef, currentCover?.videoUrl, showFullPlayer]);
-
-  // Scroll active lyric to center
-  useEffect(() => {
-    if (activeLyricRef.current) {
-      activeLyricRef.current.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-      });
-    }
-  }, [currentLyricIndex]);
 
   if (!showFullPlayer || !currentCover) return null;
 
@@ -176,26 +163,18 @@ export const Player: React.FC = () => {
           position: relative;
           z-index: 10;
           flex-grow: 1;
-          display: grid;
-          grid-template-columns: 1fr 1.2fr;
-          gap: 60px;
-          padding: 40px;
-          max-width: 1200px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 28px;
+          padding: 40px 24px;
+          max-width: 500px;
           margin: 0 auto;
           width: 100%;
           overflow: hidden;
         }
 
-        /* Left Side: Art, controls, visualizer */
-        .player-left-pane {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          gap: 30px;
-          overflow: hidden;
-        }
-        
         .visualizer-container {
           width: 280px;
           height: 280px;
@@ -335,18 +314,6 @@ export const Player: React.FC = () => {
           background: white;
         }
 
-        /* Right Side: Lyrics pane container */
-        .player-right-pane {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: flex-start;
-          overflow: hidden;
-          position: relative;
-          border-left: 1px solid var(--border-glass);
-          padding-left: 50px;
-        }
-
         /* Visualizer Selector Buttons */
         .visualizer-selector-row {
           display: flex;
@@ -378,48 +345,29 @@ export const Player: React.FC = () => {
 
         @media (max-width: 991px) {
           .player-body {
-            grid-template-columns: 1fr;
-            grid-template-rows: 1fr;
             gap: 20px;
             padding: 20px;
-            overflow: hidden;
-          }
-          .player-right-pane {
-            display: none !important;
-          }
-          .player-left-pane {
-            width: 100%;
-            height: 100%;
-            justify-content: space-around;
-            gap: 10px;
           }
           .player-header {
             padding: 16px 20px;
           }
-          .visualizer-container {
-            width: 220px;
-            height: 220px;
-          }
-          .large-album-art {
-            width: 140px;
-            height: 140px;
-          }
-          .large-song-title {
-            font-size: 1.6rem;
-          }
         }
 
         @media (max-width: 480px) {
+          .player-body {
+            gap: 15px;
+            padding: 15px;
+          }
           .visualizer-container {
-            width: 180px;
-            height: 180px;
+            width: 200px;
+            height: 200px;
           }
           .large-album-art {
-            width: 110px;
-            height: 110px;
+            width: 125px;
+            height: 125px;
           }
           .large-song-title {
-            font-size: 1.35rem;
+            font-size: 1.4rem;
           }
           .playback-controls-row {
             gap: 16px;
@@ -455,125 +403,97 @@ export const Player: React.FC = () => {
 
         {/* Player Layout */}
         <div className="player-body">
-          {/* Left Panel: Record & Audio Controllers */}
-          <div className="player-left-pane">
-            <div className="visualizer-container">
-              {/* Spinning record cover art in the center */}
-              <div 
-                className="large-album-art"
-                style={{ background: currentCover.coverImage }}
-              >
-                <Music size={48} style={{ color: 'white' }} />
-              </div>
-              
-              {/* Web Audio Canvas visualizer wrapped around the record */}
-              <Visualizer type={visualizerType} />
+          <div className="visualizer-container">
+            {/* Spinning record cover art in the center */}
+            <div 
+              className="large-album-art"
+              style={{ background: currentCover.coverImage }}
+            >
+              <Music size={48} style={{ color: 'white' }} />
             </div>
+            
+            {/* Web Audio Canvas visualizer wrapped around the record */}
+            <Visualizer type={visualizerType} />
+          </div>
 
-            {/* Song Text info */}
-            <div className="song-details-pane">
-              <h2 className="large-song-title">{currentCover.title}</h2>
-              <p className="large-song-artist">Cover by Hak Yany</p>
-              
-              {/* Visualizer Type Selector */}
-              <div className="visualizer-selector-row">
-                <button 
-                  className={`viz-btn ${visualizerType === 'circular' ? 'active' : ''}`}
-                  onClick={() => setVisualizerType('circular')}
-                >
-                  Orb
-                </button>
-                <button 
-                  className={`viz-btn ${visualizerType === 'wave' ? 'active' : ''}`}
-                  onClick={() => setVisualizerType('wave')}
-                >
-                  Sine
-                </button>
-                <button 
-                  className={`viz-btn ${visualizerType === 'bars' ? 'active' : ''}`}
-                  onClick={() => setVisualizerType('bars')}
-                >
-                  Bars
-                </button>
-              </div>
-            </div>
-
-            {/* Timeline Progress Bar */}
-            <div className="player-timeline-box">
-              <input 
-                type="range"
-                min="0"
-                max={duration || 100}
-                value={currentTime}
-                onChange={handleProgressChange}
-                className="timeline-slider"
-              />
-              <div className="timeline-timer">
-                <span>{formatTime(currentTime)}</span>
-                <span>{formatTime(duration)}</span>
-              </div>
-            </div>
-
-            {/* Control buttons */}
-            <div className="playback-controls-row">
-              <button className="control-cycle-btn" onClick={handlePrev}>
-                <SkipForward size={22} style={{ transform: 'rotate(180deg)' }} />
-              </button>
-              
+          {/* Song Text info */}
+          <div className="song-details-pane">
+            <h2 className="large-song-title">{currentCover.title}</h2>
+            <p className="large-song-artist">Cover by Hak Yany</p>
+            
+            {/* Visualizer Type Selector */}
+            <div className="visualizer-selector-row">
               <button 
-                className="main-play-pause-btn"
-                onClick={togglePlay}
+                className={`viz-btn ${visualizerType === 'circular' ? 'active' : ''}`}
+                onClick={() => setVisualizerType('circular')}
               >
-                {isPlaying ? (
-                  <Pause size={28} fill="currentColor" />
-                ) : (
-                  <Play size={28} fill="currentColor" style={{ marginLeft: '4px' }} />
-                )}
+                Orb
               </button>
-              
-              <button className="control-cycle-btn" onClick={handleNext}>
-                <SkipForward size={22} />
+              <button 
+                className={`viz-btn ${visualizerType === 'wave' ? 'active' : ''}`}
+                onClick={() => setVisualizerType('wave')}
+              >
+                Sine
               </button>
-            </div>
-
-            {/* Volume control */}
-            <div className="volume-control-row">
-              <Volume2 size={16} />
-              <input 
-                type="range"
-                min="0"
-                max="1"
-                step="0.01"
-                value={volume}
-                onChange={(e) => changeVolume(parseFloat(e.target.value))}
-                className="volume-slider"
-              />
+              <button 
+                className={`viz-btn ${visualizerType === 'bars' ? 'active' : ''}`}
+                onClick={() => setVisualizerType('bars')}
+              >
+                Bars
+              </button>
             </div>
           </div>
 
-          {/* Right Panel: Synced Scrolling Lyrics */}
-          <div className="player-right-pane lyrics-container-wrapper">
-            <div className="lyrics-pane custom-scroll">
-              {parsedLyrics.length > 0 ? (
-                parsedLyrics.map((lyric, idx) => {
-                  const isActive = idx === currentLyricIndex;
-                  return (
-                    <div
-                      key={idx}
-                      ref={isActive ? activeLyricRef : null}
-                      className={`lyric-item ${isActive ? 'lyric-active' : ''}`}
-                      onClick={() => seek(lyric.time)}
-                    >
-                      {lyric.text}
-                    </div>
-                  );
-                })
-              ) : (
-                <div className="lyric-item" style={{ opacity: 0.5, textAlign: 'center', width: '100%' }}>
-                  No lyrics available for this cover.
-                </div>
-              )}
+          {/* Timeline Progress Bar */}
+          <div className="player-timeline-box">
+            <input 
+              type="range"
+              min="0"
+              max={duration || 100}
+              value={currentTime}
+              onChange={handleProgressChange}
+              className="timeline-slider"
+            />
+            <div className="timeline-timer">
+              <span>{formatTime(currentTime)}</span>
+              <span>{formatTime(duration)}</span>
             </div>
+          </div>
+
+          {/* Control buttons */}
+          <div className="playback-controls-row">
+            <button className="control-cycle-btn" onClick={handlePrev}>
+              <SkipForward size={22} style={{ transform: 'rotate(180deg)' }} />
+            </button>
+            
+            <button 
+              className="main-play-pause-btn"
+              onClick={togglePlay}
+            >
+              {isPlaying ? (
+                <Pause size={28} fill="currentColor" />
+              ) : (
+                <Play size={28} fill="currentColor" style={{ marginLeft: '4px' }} />
+              )}
+            </button>
+            
+            <button className="control-cycle-btn" onClick={handleNext}>
+              <SkipForward size={22} />
+            </button>
+          </div>
+
+          {/* Volume control */}
+          <div className="volume-control-row">
+            <Volume2 size={16} />
+            <input 
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={volume}
+              onChange={(e) => changeVolume(parseFloat(e.target.value))}
+              className="volume-slider"
+            />
           </div>
         </div>
       </div>
